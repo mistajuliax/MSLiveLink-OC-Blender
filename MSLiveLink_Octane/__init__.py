@@ -304,6 +304,7 @@ class MS_Init_ImportProcess():
                     if len(imgPath) >= 1:
                         imgPath = imgPath[0].replace("\\", "/")
 
+                        y_exp += -320
                         texNode.location = (-720, y_exp)
 
                         texNode.image = bpy.data.images.load(imgPath)
