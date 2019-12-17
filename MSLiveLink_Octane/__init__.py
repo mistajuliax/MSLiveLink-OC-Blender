@@ -285,11 +285,11 @@ class MS_Init_ImportProcess():
                         mat.node_tree.links.new(mixNode.inputs['Amount'], texNode.outputs[0])
 
                         transpNode = nodes.new('ShaderNodeOctDiffuseMat')
-                        transpNode.location = (375, 168)
+                        transpNode.location = (256, -320)
                         transpNode.inputs['Opacity'].default_value = 0
 
-                        mat.node_tree.links.new(mixNode.inputs['Material1'], transpNode.outputs[0])
-                        mat.node_tree.links.new(mixNode.inputs['Material2'], mainMat.outputs[0])
+                        mat.node_tree.links.new(mixNode.inputs['Material1'], mainMat.outputs[0])
+                        mat.node_tree.links.new(mixNode.inputs['Material2'], transpNode.outputs[0])
 
                         mat.node_tree.links.new(outNode.inputs['Surface'], mixNode.outputs[0])
 
@@ -305,7 +305,7 @@ class MS_Init_ImportProcess():
                     if len(imgPath) >= 1:
                         imgPath = imgPath[0].replace("\\", "/")
 
-                        texNode.location = (-720*1.5, y_exp)
+                        texNode.location = (-720, y_exp)
 
                         texNode.image = bpy.data.images.load(imgPath)
                         texNode.show_texture = True
