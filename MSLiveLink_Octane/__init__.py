@@ -244,7 +244,7 @@ class MS_Init_ImportProcess():
 
                 # Create the translucency setup.
                 if "translucency" in maps_:
-
+                    '''
                     imgPath = [item[2] for item in self.textureList if item[1] == "translucency"]
                     if len(imgPath) >= 1:
                         imgPath = imgPath[0].replace("\\", "/")
@@ -257,6 +257,8 @@ class MS_Init_ImportProcess():
                         texNode.image.colorspace_settings.name = colorSpaces[0]
 
                         mat.node_tree.links.new(nodes.get(parentName).inputs[3], texNode.outputs[0])
+                    '''
+                    pass
 
                 # Create the opacity setup
                 if "opacity" in maps_:
