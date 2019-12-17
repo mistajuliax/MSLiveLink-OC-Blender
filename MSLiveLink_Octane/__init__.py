@@ -291,9 +291,8 @@ class MS_Init_ImportProcess():
 
                 # Create the normal map setup for Redshift.
                 if "normal" in maps_:
-
-                    normalNode = nodes.new('ShaderNodeNormalMap')
-                    texNode = nodes.new('ShaderNodeTexImage')
+                    
+                    texNode = nodes.new('ShaderNodeOctImageTex')
 
                     imgPath = [item[2] for item in self.textureList if item[1] == "normal"]
                     if len(imgPath) >= 1:
@@ -305,13 +304,9 @@ class MS_Init_ImportProcess():
                         texNode.show_texture = True
                         texNode.image.colorspace_settings.name = colorSpaces[1]
 
-                        normalNode.location = (-450, y_exp)
-
-                        mat.node_tree.links.new(nodes.get(parentName).inputs[19], normalNode.outputs[0])
                         texNode.image.colorspace_settings.name = colorSpaces[1]
-                        mat.node_tree.links.new(texNode.outputs[0], normalNode.inputs[1])
-
-                        mat.node_tree.links.new(texNode.outputs[0], normalNode.inputs[1])
+                        mat.node_tree.links.new(mainMat.inputs['Normal'], texNode.outputs[0])
+        
         except Exception as e:
             print( "Megascans LiveLink Error while importing textures/geometry or setting up material. Error: ", str(e) )
 
