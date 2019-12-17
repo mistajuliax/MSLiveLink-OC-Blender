@@ -220,7 +220,26 @@ class MS_Init_ImportProcess():
                 # Create the displacement setup.
                 if "displacement" in maps_:
 
-                    pass
+                    imgPath = [item[2] for item in self.textureList if item[1] == "displacement"]
+                    if len(imgPath) >= 1:
+                        imgPath = imgPath[0].replace("\\", "/")
+                        texNode = nodes.new('ShaderNodeOctImageTex')
+                        y_exp += -320
+                        texNode.location = (-720, y_exp)
+                        texNode.image = bpy.data.images.load(imgPath)
+                        texNode.show_texture = True
+                        texNode.image.colorspace_settings.name = colorSpaces[1]
+
+                        dispNode = nodes.new('ShaderNodeOctDisplacementTex')
+                        dispNode.displacement_level = 'OCTANE_DISPLACEMENT_LEVEL_4096'
+                        #dispNode.displacement_filter = 'OCTANE_FILTER_TYPE_BOX'
+                        dispNode.inputs['Mid level'].default_value = 0.5
+                        dispNode.inputs['Height'].default_value = 0.1
+                        
+                        dispNode.location = (-360, -680)
+
+                        mat.node_tree.links.new(dispNode.inputs['Texture'], texNode.outputs[0])
+                        mat.node_tree.links.new(mainMat.inputs['Displacement'], dispNode.outputs[0])
 
                 # Create the translucency setup.
                 if "translucency" in maps_:
