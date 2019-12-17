@@ -150,6 +150,7 @@ class MS_Init_ImportProcess():
 
                 mainMat.inputs['Metallic'].default_value = 1 if self.isMetal else 0 # Metallic value
                 mainMat.inputs['Dielectric IOR'].default_value = 1.52 # IOR Value
+                mainMat.inputs['Specular'].default_value = 0.5
 
                 y_exp = 310
 
