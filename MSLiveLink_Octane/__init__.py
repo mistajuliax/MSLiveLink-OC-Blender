@@ -19,11 +19,11 @@ import bpy, threading, os, time, json, socket
 globals()['Megascans_DataSet'] = None
 
 bl_info = {
-    "name": "Megascans LiveLink",
-    "description": "Connects Blender to Quixel Bridge for one-click imports with shader setup and geometry",
+    "name": "Megascans LiveLink Octane",
+    "description": "Connects Octane Blender to Quixel Bridge for one-click imports with shader setup and geometry",
     "author": "Quixel",
     "version": (1, 2),
-    "blender": (2, 80, 0),
+    "blender": (2, 81, 0),
     "location": "File > Import",
     "warning": "", # used for warning icon and text in addons panel
     "wiki_url": "https://docs.quixel.org/bridge/livelinks/blender/info_quickstart.html",
