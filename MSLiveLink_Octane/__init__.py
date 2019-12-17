@@ -397,7 +397,7 @@ class thread_checker(threading.Thread):
 class MS_Init_LiveLink(bpy.types.Operator):
 
     bl_idname = "ms_livelink.py"
-    bl_label = "Megascans LiveLink"
+    bl_label = "Megascans LiveLink Octane"
     socketCount = 0
 
     def execute(self, context):
