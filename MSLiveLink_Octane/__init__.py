@@ -191,15 +191,15 @@ class MS_Init_ImportProcess():
                     if len(imgPath) >= 1:
                         imgPath = imgPath[0].replace("\\", "/")
 
-                        texNode = nodes.new('ShaderNodeTexImage')
+                        texNode = nodes.new('ShaderNodeOctImageTex')
                         y_exp += -320
                         texNode.location = (-720, y_exp)
                         texNode.image = bpy.data.images.load(imgPath)
                         texNode.show_texture = True
                         texNode.image.colorspace_settings.name = colorSpaces[1]
 
-                        mat.node_tree.links.new(nodes.get(parentName).inputs[10], texNode.outputs[0])
-                        nodes.get(parentName).inputs[11].default_value = 1
+                        mat.node_tree.links.new(mainMat.inputs['Sheen'], texNode.outputs[0])
+                        mainMat.inputs['Sheen Roughness'].default_value = 0
 
                 # Create the metalness setup
                 if "metalness" in maps_:
