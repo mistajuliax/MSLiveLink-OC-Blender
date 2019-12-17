@@ -1,3 +1,6 @@
+# Quixel Megascans Livelink for Octane Blender Edition
+# Author : Yichen Dou
+# 
 # ##### QUIXEL AB - MEGASCANS LIVELINK FOR BLENDER #####
 #
 # The Megascans LiveLink plugin for Blender is an add-on that lets
@@ -11,9 +14,6 @@
 #
 # ##### QUIXEL AB - MEGASCANS LIVELINK FOR BLENDER #####
 
-
-# version: 0.5b 
-
 import bpy, threading, os, time, json, socket
 
 globals()['Megascans_DataSet'] = None
@@ -22,7 +22,7 @@ bl_info = {
     "name": "Megascans LiveLink Octane",
     "description": "Connects Octane Blender to Quixel Bridge for one-click imports with shader setup and geometry",
     "author": "Quixel",
-    "version": (1, 2),
+    "version": (1, 0),
     "blender": (2, 81, 0),
     "location": "File > Import",
     "warning": "", # used for warning icon and text in addons panel
