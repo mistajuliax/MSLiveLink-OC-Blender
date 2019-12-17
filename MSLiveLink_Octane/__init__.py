@@ -127,9 +127,15 @@ class MS_Init_ImportProcess():
 
                 # Create material
                 mat = (bpy.data.materials.get( self.materialName ) or bpy.data.materials.new( self.materialName ))
-
                 mat.use_nodes = True
                 nodes = mat.node_tree.nodes
+
+                # replace default octane shader with a universal shader
+                oldMainMat = nodes.get('Material Output').getNodeTree().nodes[1]
+                mainMat = nodes.new('ShaderNodeOctUniversalMat')
+                mainMat.location = oldMainMat.location
+                nodes.remove(oldMainMat)
+                mat.node_tree.links.new(nodes.get('Material Output').inputs[0], mainMat.outputs[0])
 
                 # iterate through all objects
                 for obj in self.selectedObjects:
@@ -138,11 +144,11 @@ class MS_Init_ImportProcess():
 
                 # Get a list of all available texture maps. item[1] returns the map type (albedo, normal, etc...).
                 maps_ = [item[1] for item in self.textureList]
-                parentName = "Principled BSDF"
+                parentName = "Universal Material"
                 colorSpaces = ["sRGB", "Linear"]
 
-                mat.node_tree.nodes[parentName].inputs[4].default_value = 1 if self.isMetal else 0 # Metallic value
-                mat.node_tree.nodes[parentName].inputs[14].default_value = 1.52 # IOR Value
+                mainMat.inputs['Metallic'].default_value = 1 if self.isMetal else 0 # Metallic value
+                mainMat.inputs['Dielectric IOR'].default_value = 1.52 # IOR Value
 
                 y_exp = 310
 
