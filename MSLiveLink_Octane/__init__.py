@@ -131,11 +131,12 @@ class MS_Init_ImportProcess():
                 nodes = mat.node_tree.nodes
 
                 # replace default octane shader with a universal shader
+                outNode = nodes.get('Material Output')
                 oldMainMat = nodes.get('Material Output').getNodeTree().nodes[1]
                 mainMat = nodes.new('ShaderNodeOctUniversalMat')
                 mainMat.location = oldMainMat.location
                 nodes.remove(oldMainMat)
-                mat.node_tree.links.new(nodes.get('Material Output').inputs[0], mainMat.outputs[0])
+                mat.node_tree.links.new(outNode.inputs['Surface'], mainMat.outputs[0])
 
                 # iterate through all objects
                 for obj in self.selectedObjects:
@@ -264,26 +265,26 @@ class MS_Init_ImportProcess():
                     if len(imgPath) >= 1:
                         imgPath = imgPath[0].replace("\\", "/")
 
-                        texNode = nodes.new('ShaderNodeTexImage')
+                        texNode = nodes.new('ShaderNodeOctImageTex')
                         y_exp += -320
                         texNode.location = (256, 0)
                         texNode.image = bpy.data.images.load(imgPath)
                         texNode.show_texture = True
                         texNode.image.colorspace_settings.name = colorSpaces[1]
 
-                        # mat.node_tree.links.new(nodes.get(parentName).inputs[4], texNode.outputs[0])
-
-                        mixNode = nodes.new('ShaderNodeMixShader')
+                        mixNode = nodes.new('ShaderNodeOctMixMat')
                         mixNode.location = (630, 0)
-                        mixNode.inputs[0].default_value = 1
-                        mat.node_tree.links.new(mixNode.inputs[0], texNode.outputs[0])
+                        mixNode.inputs['Amount'].default_value = 1
+                        mat.node_tree.links.new(mixNode.inputs['Amount'], texNode.outputs[0])
 
-                        transpNode = nodes.new('ShaderNodeBsdfTransparent')
+                        transpNode = nodes.new('ShaderNodeOctDiffuseMat')
                         transpNode.location = (375, 168)
-                        mat.node_tree.links.new(mixNode.inputs[1], transpNode.outputs[0])
+                        transpNode.inputs['Opacity'].default_value = 0
 
-                        mat.node_tree.links.new(nodes.get("Principled BSDF").outputs["BSDF"], mixNode.inputs[2])
-                        mat.node_tree.links.new(nodes.get("Material Output").inputs["Surface"], mixNode.outputs[0])
+                        mat.node_tree.links.new(mixNode.inputs['Material1'], transpNode.outputs[0])
+                        mat.node_tree.links.new(mixNode.inputs['Material2'], mainMat.outputs[0])
+
+                        mat.node_tree.links.new(outNode.inputs['Surface'], mixNode.outputs[0])
 
                         mat.blend_method = 'CLIP'
                         mat.shadow_method = 'CLIP'
