@@ -449,7 +449,7 @@ def show_error_dialog(self, context):
      self.report({'INFO'}, "This is a test")
 
 def menu_func_import(self, context):
-    self.layout.operator(MS_Init_LiveLink.bl_idname, text="Megascans LiveLink")
+    self.layout.operator(MS_Init_LiveLink.bl_idname, text="Megascans LiveLink Octane")
 
 
 def register():
