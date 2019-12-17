@@ -104,7 +104,7 @@ class MS_Init_ImportProcess():
     # this method is used to import the geometry and create the material setup.
     def initImportProcess(self):
         try:
-            if len(self.textureList) >= 1:
+            if len(self.textureList) >= 1 and bpy.context.scene.render.engine == 'octane':
 
                 # Import geometry
                 if len(self.geometryList) >= 1:
@@ -144,7 +144,6 @@ class MS_Init_ImportProcess():
 
                 # Get a list of all available texture maps. item[1] returns the map type (albedo, normal, etc...).
                 maps_ = [item[1] for item in self.textureList]
-                parentName = "Universal Material"
                 colorSpaces = ["sRGB", "Linear"]
 
                 mainMat.inputs['Metallic'].default_value = 1 if self.isMetal else 0 # Metallic value
