@@ -1,5 +1,4 @@
-# Quixel Megascans Livelink for Octane Blender Edition
-# Author : Yichen Dou
+# [Quixel Megascans Livelink for Octane Blender Edition]
 # 
 # ##### QUIXEL AB - MEGASCANS LIVELINK FOR BLENDER #####
 #
@@ -21,7 +20,7 @@ globals()['Megascans_DataSet'] = None
 bl_info = {
     "name": "Megascans LiveLink Octane",
     "description": "Connects Octane Blender to Quixel Bridge for one-click imports with shader setup and geometry",
-    "author": "Quixel",
+    "author": "Yichen Dou",
     "version": (1, 0),
     "blender": (2, 81, 0),
     "location": "File > Import",
