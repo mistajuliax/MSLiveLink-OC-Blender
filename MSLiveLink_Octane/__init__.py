@@ -125,13 +125,13 @@ class MS_Init_ImportProcess():
                             self.selectedObjects += obj_objects
 
                 # Create material
-                mat = (bpy.data.materials.get( self.materialName ) or bpy.data.materials.new( self.materialName ))
+                mat = bpy.data.materials.new( self.materialName )
                 mat.use_nodes = True
                 nodes = mat.node_tree.nodes
 
                 # replace default octane shader with a universal shader
-                outNode = nodes.get('Material Output')
-                oldMainMat = nodes.get('Material Output').getNodeTree().nodes[1]
+                outNode = nodes[0]
+                oldMainMat = nodes[1]
                 mainMat = nodes.new('ShaderNodeOctUniversalMat')
                 mainMat.location = oldMainMat.location
                 nodes.remove(oldMainMat)
@@ -272,7 +272,7 @@ class MS_Init_ImportProcess():
                         imgPath = imgPath[0].replace("\\", "/")
 
                         texNode = nodes.new('ShaderNodeOctImageTex')
-                        y_exp += -320
+                        # y_exp += -320
                         texNode.location = (256, 0)
                         texNode.image = bpy.data.images.load(imgPath)
                         texNode.show_texture = True
