@@ -236,7 +236,6 @@ class MS_Init_ImportProcess():
                         #dispNode.displacement_filter = 'OCTANE_FILTER_TYPE_BOX'
                         dispNode.inputs['Mid level'].default_value = 0.5
                         dispNode.inputs['Height'].default_value = 0.1
-                        
                         dispNode.location = (-360, -680)
 
                         mat.node_tree.links.new(dispNode.inputs['Texture'], texNode.outputs[0])
@@ -244,20 +243,26 @@ class MS_Init_ImportProcess():
 
                 # Create the translucency setup.
                 if "translucency" in maps_:
-                    '''
+
                     imgPath = [item[2] for item in self.textureList if item[1] == "translucency"]
                     if len(imgPath) >= 1:
                         imgPath = imgPath[0].replace("\\", "/")
 
-                        texNode = nodes.new('ShaderNodeTexImage')
+                        texNode = nodes.new('ShaderNodeOctImageTex')
                         y_exp += -320
                         texNode.location = (-720, y_exp)
                         texNode.image = bpy.data.images.load(imgPath)
                         texNode.show_texture = True
                         texNode.image.colorspace_settings.name = colorSpaces[0]
 
-                        mat.node_tree.links.new(nodes.get(parentName).inputs[3], texNode.outputs[0])
-                    '''
+                        scatterNode = nodes.new('ShaderNodeOctScatteringMedium')
+                        scatterNode.inputs['Absorption Tex'].default_value = (1, 1, 1, 1)
+                        scatterNode.inputs['Invert abs.'].default_value = False
+                        scatterNode.location = (-360, -1000)
+
+                        mat.node_tree.links.new(mainMat.inputs['Transmission'], texNode.outputs[0])
+                        mat.node_tree.links.new(mainMat.inputs['Medium'], scatterNode.outputs[0])
+
                     pass
 
                 # Create the opacity setup
