@@ -208,14 +208,14 @@ class MS_Init_ImportProcess():
                     if len(imgPath) >= 1:
                         imgPath = imgPath[0].replace("\\", "/")
 
-                        texNode = nodes.new('ShaderNodeTexImage')
+                        texNode = nodes.new('ShaderNodeOctImageTex')
                         y_exp += -320
                         texNode.location = (-720, y_exp)
                         texNode.image = bpy.data.images.load(imgPath)
                         texNode.show_texture = True
                         texNode.image.colorspace_settings.name = colorSpaces[1]
 
-                        mat.node_tree.links.new(nodes.get(parentName).inputs[4], texNode.outputs[0])
+                        mat.node_tree.links.new(mainMat.inputs['Metallic'], texNode.outputs[0])
 
                 # Create the displacement setup.
                 if "displacement" in maps_:
