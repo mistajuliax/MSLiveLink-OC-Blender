@@ -331,18 +331,21 @@ class MS_Init_ImportProcess():
 
                         mat.node_tree.links.new(mainMat.inputs['Specular'], texNode.outputs[0])
                 else:
-                    rgbNode = nodes.new('ShaderNodeOctRGBSpectrumTex')
+                    try:
+                        rgbNode = nodes.new('ShaderNodeOctRGBSpectrumTex')
+                        targetJson = self.assetJson["maps"] if ("maps" in self.assetJson) else self.assetJson["components"]
+                        specularItems = [item for item in targetJson if item["type"] == "specular"]
+                        if len(specularItems) > 0:
+                            hexValue = specularItems[0]['averageColor'].lstrip('#')
+                            specValue = [col/255 for col in [int(hexValue[i:i+2], 16) for i in (0, 2, 4)]]
+                            specValue.append(1)
 
-                    specularItems = [item for item in self.assetJson['maps'] if item['name'] == "Specular"]
-                    if len(specularItems) > 0:
-                        hexValue = specularItems[0]['averageColor'].lstrip('#')
-                        specValue = [col/255 for col in [int(hexValue[i:i+2], 16) for i in (0, 2, 4)]]
-                        specValue.append(1)
+                            rgbNode.location = (-720, 200)
+                            rgbNode.inputs[0].default_value = tuple(specValue)
 
-                        rgbNode.location = (-720, 200)
-                        rgbNode.inputs[0].default_value = tuple(specValue)
-
-                        mat.node_tree.links.new(mainMat.inputs['Specular'], rgbNode.outputs[0])
+                            mat.node_tree.links.new(mainMat.inputs['Specular'], rgbNode.outputs[0])
+                    except Exception as e:
+                        print( "Cannot find specular information : ", str(e) )
 
                 # Create the bump map setup
                 if "bump" in maps_:
