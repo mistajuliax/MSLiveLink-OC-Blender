@@ -343,6 +343,24 @@ class MS_Init_ImportProcess():
                         rgbNode.inputs[0].default_value = tuple(specValue)
 
                         mat.node_tree.links.new(mainMat.inputs['Specular'], rgbNode.outputs[0])
+
+                # Create the bump map setup
+                if "bump" in maps_:
+                    texNode = nodes.new('ShaderNodeOctImageTex')
+
+                    imgPath = [item[2] for item in self.textureList if item[1] == "bump"]
+                    if len(imgPath) >= 1:
+                        imgPath = imgPath[0].replace("\\", "/")
+
+                        y_exp += -320
+                        texNode.location = (-720, y_exp)
+
+                        texNode.image = bpy.data.images.load(imgPath)
+                        texNode.show_texture = True
+                        texNode.image.colorspace_settings.name = colorSpaces[1]
+
+                        mat.node_tree.links.new(mainMat.inputs['Bump'], texNode.outputs[0])
+        
         
         except Exception as e:
             print( "Megascans LiveLink Error while importing textures/geometry or setting up material. Error: ", str(e) )
