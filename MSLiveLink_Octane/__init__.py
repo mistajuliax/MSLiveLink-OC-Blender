@@ -21,7 +21,7 @@ bl_info = {
     "name": "Megascans LiveLink Octane",
     "description": "Connects Octane Blender to Quixel Bridge for one-click imports with shader setup and geometry",
     "author": "Yichen Dou",
-    "version": (1, 0),
+    "version": (1, 1),
     "blender": (2, 81, 0),
     "location": "File > Import",
     "warning": "", # used for warning icon and text in addons panel
