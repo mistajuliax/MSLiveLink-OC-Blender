@@ -14,6 +14,8 @@
 # ##### QUIXEL AB - MEGASCANS LIVELINK FOR BLENDER #####
 
 import bpy, threading, os, time, json, socket
+from bpy.types import Operator, AddonPreferences
+from bpy.props import StringProperty, EnumProperty
 
 globals()['Megascans_DataSet'] = None
 
@@ -34,6 +36,27 @@ bl_info = {
 
 # MS_Init_ImportProcess is the main asset import class.
 # This class is invoked whenever a new asset is set from Bridge.
+
+# Addon preferences
+disp_types = [
+    ('TEXTURE', 'Texture', 'Octane Texture Displacement'),
+    ('VERTEX', 'Vertex', 'Octane Vertex Displacement')
+]
+
+class MSLiveLinkPrefs(AddonPreferences):
+    bl_idname = __name__
+    
+    disp_type: EnumProperty(
+        items=disp_types,
+        name="Displacement Mode",
+        description="Set default Octane displacement mode",
+        default="TEXTURE"
+    )
+    
+    def draw(self, context):
+        layout=self.layout
+        layout.prop(self, "disp_type")
+
 
 class MS_Init_ImportProcess():
 
@@ -504,10 +527,12 @@ def menu_func_import(self, context):
 
 def register():
     bpy.utils.register_class(MS_Init_LiveLink)
+    bpy.utils.register_class(MSLiveLinkPrefs)
     bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
 
 def unregister():
-    # bpy.utils.unregister_class(MS_Init_LiveLink)
+    bpy.utils.unregister_class(MS_Init_LiveLink)
+    bpy.utils.unregister_class(MSLiveLinkPrefs)
     bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
 
 
