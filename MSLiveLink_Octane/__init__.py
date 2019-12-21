@@ -242,7 +242,8 @@ class MS_Init_ImportProcess():
 
                 # Create the displacement setup.
                 if "displacement" in maps_:
-
+                    
+                    prefs = bpy.context.preferences.addons[__name__].preferences
                     imgPath = [item[2] for item in self.textureList if item[1] == "displacement"]
                     if len(imgPath) >= 1:
                         imgPath = imgPath[0].replace("\\", "/")
@@ -252,12 +253,22 @@ class MS_Init_ImportProcess():
                         texNode.image = bpy.data.images.load(imgPath)
                         texNode.show_texture = True
                         texNode.image.colorspace_settings.name = colorSpaces[1]
+                        if prefs.disp_type == "VERTEX":
+                            texNode.border_mode = 'OCT_BORDER_MODE_CLAMP'
 
-                        dispNode = nodes.new('ShaderNodeOctDisplacementTex')
-                        dispNode.displacement_level = 'OCTANE_DISPLACEMENT_LEVEL_4096'
-                        #dispNode.displacement_filter = 'OCTANE_FILTER_TYPE_BOX'
-                        dispNode.inputs['Mid level'].default_value = 0.5
-                        dispNode.inputs['Height'].default_value = 0.1
+                        if prefs.disp_type == "TEXTURE":
+                            dispNode = nodes.new('ShaderNodeOctDisplacementTex')
+                            dispNode.displacement_level = 'OCTANE_DISPLACEMENT_LEVEL_4096'
+                            #dispNode.displacement_filter = 'OCTANE_FILTER_TYPE_BOX'
+                            dispNode.inputs['Mid level'].default_value = 0.5
+                            dispNode.inputs['Height'].default_value = 0.1
+                        else:
+                            dispNode = nodes.new('ShaderNodeOctVertexDisplacementTex')
+                            dispNode.inputs['Auto bump map'].default_value = True
+                            dispNode.inputs['Mid level'].default_value = 0.1
+                            dispNode.inputs['Height'].default_value = 0.1
+                            dispNode.inputs['Subdivision level'].default_value = 6
+
                         dispNode.location = (-360, -680)
 
                         mat.node_tree.links.new(dispNode.inputs['Texture'], texNode.outputs[0])
