@@ -15,7 +15,7 @@
 
 import bpy, threading, os, time, json, socket
 from bpy.types import Operator, AddonPreferences
-from bpy.props import StringProperty, EnumProperty, BoolProperty
+from bpy.props import IntProperty, EnumProperty, BoolProperty
 
 globals()['Megascans_DataSet'] = None
 
@@ -43,6 +43,15 @@ disp_types = [
     ('VERTEX', 'Vertex', 'Octane Vertex Displacement')
 ]
 
+disp_levels_texture = [
+    ('OCTANE_DISPLACEMENT_LEVEL_256', '256', '256x256'),
+    ('OCTANE_DISPLACEMENT_LEVEL_512', '512', '512x512'),
+    ('OCTANE_DISPLACEMENT_LEVEL_1024', '1024', '1024x1024'),
+    ('OCTANE_DISPLACEMENT_LEVEL_2048', '2048', '2048x2048'),
+    ('OCTANE_DISPLACEMENT_LEVEL_4096', '4096', '4096x4096'),
+    ('OCTANE_DISPLACEMENT_LEVEL_8192', '8192', '8192x8192')
+]
+
 class MSLiveLinkPrefs(AddonPreferences):
     bl_idname = __name__
     
@@ -53,6 +62,19 @@ class MSLiveLinkPrefs(AddonPreferences):
         default="TEXTURE"
     )
 
+    disp_level_texture: EnumProperty(
+        items=disp_levels_texture,
+        name="Subdivision",
+        default="OCTANE_DISPLACEMENT_LEVEL_4096"
+    )
+
+    disp_level_vertex: IntProperty(
+        name="Subdivision",
+        min=0,
+        max=6,
+        default=6
+    )
+
     is_cavity_enabled: BoolProperty(
         name="Enable Cavity map",
         default=False
@@ -61,7 +83,12 @@ class MSLiveLinkPrefs(AddonPreferences):
     def draw(self, context):
         layout=self.layout
         col = layout.column()
-        col.prop(self, "disp_type")
+        row = col.row()
+        row.prop(self, "disp_type")
+        if(self.disp_type=="TEXTURE"):
+            row.prop(self, "disp_level_texture")
+        else:
+            row.prop(self, "disp_level_vertex")
         col.prop(self, "is_cavity_enabled")
 
 
@@ -266,7 +293,7 @@ class MS_Init_ImportProcess():
 
                         if prefs.disp_type == "TEXTURE":
                             dispNode = nodes.new('ShaderNodeOctDisplacementTex')
-                            dispNode.displacement_level = 'OCTANE_DISPLACEMENT_LEVEL_4096'
+                            dispNode.displacement_level = prefs.disp_level_texture
                             #dispNode.displacement_filter = 'OCTANE_FILTER_TYPE_BOX'
                             dispNode.inputs['Mid level'].default_value = 0.5
                             dispNode.inputs['Height'].default_value = 0.1
@@ -275,7 +302,7 @@ class MS_Init_ImportProcess():
                             dispNode.inputs['Auto bump map'].default_value = True
                             dispNode.inputs['Mid level'].default_value = 0.1
                             dispNode.inputs['Height'].default_value = 0.1
-                            dispNode.inputs['Subdivision level'].default_value = 6
+                            dispNode.inputs['Subdivision level'].default_value = prefs.disp_level_vertex
 
                         dispNode.location = (-360, -680)
 
