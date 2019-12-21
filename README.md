@@ -42,6 +42,9 @@ OctaneRender™ for Blender 2019.1.4 - 20.6 [TEST] and later
 Otherwise, socket running in the thread will cause a problem
 
 ## Features
+> Specular map option in Megascans Bridge is suggested to be turned on before you download the asset
+> Bump and Cavity maps are optional and not recommanded to use directly
+> If you see some chunks on the texture, it's probally caused by the Bump map
 
 | Title        | Status        |
 | ------------ | ------------- |
