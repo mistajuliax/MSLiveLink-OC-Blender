@@ -79,6 +79,11 @@ class MSLiveLinkPrefs(AddonPreferences):
         name="Enable Cavity map",
         default=False
     )
+
+    is_bump_enabled: BoolProperty(
+        name="Enable Bump map",
+        default=False
+    )
     
     def draw(self, context):
         layout=self.layout
@@ -90,6 +95,7 @@ class MSLiveLinkPrefs(AddonPreferences):
         else:
             row.prop(self, "disp_level_vertex")
         col.prop(self, "is_cavity_enabled")
+        col.prop(self, "is_bump_enabled")
 
 
 class MS_Init_ImportProcess():
@@ -417,7 +423,7 @@ class MS_Init_ImportProcess():
                         print( "Cannot find specular information : ", str(e) )
 
                 # Create the bump map setup
-                if "bump" in maps_:
+                if ("bump" in maps_) and (prefs.is_cavity_enabled):
                     texNode = nodes.new('ShaderNodeOctImageTex')
 
                     imgPath = [item[2] for item in self.textureList if item[1] == "bump"]
@@ -431,7 +437,7 @@ class MS_Init_ImportProcess():
                         texNode.show_texture = True
                         texNode.image.colorspace_settings.name = colorSpaces[1]
 
-                        mat.node_tree.links.new(mainMat.inputs['Bump'], texNode.outputs[0])
+                        #mat.node_tree.links.new(mainMat.inputs['Bump'], texNode.outputs[0])
 
                 if ("cavity" in maps_) and (prefs.is_cavity_enabled):
                     texNode = nodes.new('ShaderNodeOctImageTex')
