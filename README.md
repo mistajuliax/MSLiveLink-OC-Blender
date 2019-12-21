@@ -31,6 +31,8 @@ OctaneRender™ for Blender 2019.1.4 - 20.6 [TEST] and later
 7. Open the Megascans Bridge and change the export method to Blender
 8. Click export. Feel fun
 
+![1](assets/1.jpg)
+
 ## Upgrading
 
 1. Remove the addon and relaunch the OC Blender 
@@ -53,8 +55,8 @@ Otherwise, socket running in the thread will cause a problem
 | Metalness    | Supported     |
 | Bump         | Supported     |
 | Fuzz         | Supported     |
-| Cavity       | WIP           |
-| AO           | WIP           |
+| Cavity       | Supported     |
+| AO           | Not Supported |
 | Gloss        | Not Supported |
 | Normal Bump  | Not Supported |
 
