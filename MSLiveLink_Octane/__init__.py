@@ -15,7 +15,7 @@
 
 import bpy, threading, os, time, json, socket
 from bpy.types import Operator, AddonPreferences
-from bpy.props import StringProperty, EnumProperty
+from bpy.props import StringProperty, EnumProperty, BoolProperty
 
 globals()['Megascans_DataSet'] = None
 
@@ -52,10 +52,17 @@ class MSLiveLinkPrefs(AddonPreferences):
         description="Set default Octane displacement mode",
         default="TEXTURE"
     )
+
+    is_cavity_enabled: BoolProperty(
+        name="Enable Cavity map",
+        default=False
+    )
     
     def draw(self, context):
         layout=self.layout
-        layout.prop(self, "disp_type")
+        col = layout.column()
+        col.prop(self, "disp_type")
+        col.prop(self, "is_cavity_enabled")
 
 
 class MS_Init_ImportProcess():
@@ -175,6 +182,8 @@ class MS_Init_ImportProcess():
 
                 y_exp = 310
 
+                prefs = bpy.context.preferences.addons[__name__].preferences
+
                 # Create the albedo setup.
                 if "albedo" in maps_:
 
@@ -243,7 +252,6 @@ class MS_Init_ImportProcess():
                 # Create the displacement setup.
                 if "displacement" in maps_:
                     
-                    prefs = bpy.context.preferences.addons[__name__].preferences
                     imgPath = [item[2] for item in self.textureList if item[1] == "displacement"]
                     if len(imgPath) >= 1:
                         imgPath = imgPath[0].replace("\\", "/")
@@ -397,7 +405,20 @@ class MS_Init_ImportProcess():
                         texNode.image.colorspace_settings.name = colorSpaces[1]
 
                         mat.node_tree.links.new(mainMat.inputs['Bump'], texNode.outputs[0])
-        
+
+                if ("cavity" in maps_) and (prefs.is_cavity_enabled):
+                    texNode = nodes.new('ShaderNodeOctImageTex')
+
+                    imgPath = [item[2] for item in self.textureList if item[1] == "cavity"]
+                    if len(imgPath) >= 1:
+                        imgPath = imgPath[0].replace("\\", "/")
+
+                        y_exp += -320
+                        texNode.location = (-720, y_exp)
+
+                        texNode.image = bpy.data.images.load(imgPath)
+                        texNode.show_texture = True
+                        texNode.image.colorspace_settings.name = colorSpaces[1]
 
         except Exception as e:
             print( "Megascans LiveLink Error while importing textures/geometry or setting up material. Error: ", str(e) )
