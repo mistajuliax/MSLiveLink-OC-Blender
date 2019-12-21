@@ -85,7 +85,7 @@ class MS_Init_ImportProcess():
 
                     baseTextures = ["albedo", "displacement", "normal", "roughness",
                                     "specular", "normalbump", "ao", "opacity",
-                                    "translucency", "gloss", "metalness", "bump", "fuzz"]
+                                    "translucency", "gloss", "metalness", "bump", "fuzz", "cavity"]
 
                     # Create a list of tuples of all the textures maps available.
                     # This tuple is composed of (textureFormat, textureMapType, texturePath)
@@ -398,7 +398,7 @@ class MS_Init_ImportProcess():
 
                         mat.node_tree.links.new(mainMat.inputs['Bump'], texNode.outputs[0])
         
-        
+
         except Exception as e:
             print( "Megascans LiveLink Error while importing textures/geometry or setting up material. Error: ", str(e) )
 
@@ -542,9 +542,9 @@ def register():
     bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
 
 def unregister():
-    bpy.utils.unregister_class(MS_Init_LiveLink)
-    bpy.utils.unregister_class(MSLiveLinkPrefs)
     bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
+    bpy.utils.unregister_class(MSLiveLinkPrefs)
+    bpy.utils.unregister_class(MS_Init_LiveLink)
 
 
 
