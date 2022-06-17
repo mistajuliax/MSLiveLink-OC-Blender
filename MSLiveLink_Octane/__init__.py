@@ -111,6 +111,10 @@ class MS_Init_ImportProcess():
             if globals()['Megascans_DataSet'] != None:
                 self.json_Array = json.loads(globals()['Megascans_DataSet'])
 
+                baseTextures = ["albedo", "displacement", "normal", "roughness",
+                                "specular", "normalbump", "ao", "opacity",
+                                "translucency", "gloss", "metalness", "bump", "fuzz", "cavity"]
+
                 # Start looping over each asset in the self.json_Array list
                 for js in self.json_Array:
 
@@ -121,18 +125,15 @@ class MS_Init_ImportProcess():
                     self.assetType = self.json_data["type"]
                     self.assetPath = self.json_data["path"]
                     self.assetID = self.json_data["id"]
-                    self.isMetal = bool(self.json_data["category"] == "Metal") 
-
-                    baseTextures = ["albedo", "displacement", "normal", "roughness",
-                                    "specular", "normalbump", "ao", "opacity",
-                                    "translucency", "gloss", "metalness", "bump", "fuzz", "cavity"]
+                    self.isMetal = self.json_data["category"] == "Metal" 
 
                     # Create a list of tuples of all the textures maps available.
                     # This tuple is composed of (textureFormat, textureMapType, texturePath)
-                    self.textureList = []
-                    for obj in self.json_data["components"]:
-                        if obj["type"] in baseTextures:
-                            self.textureList.append( (obj["format"], obj["type"], obj["path"]) )
+                    self.textureList = [
+                        (obj["format"], obj["type"], obj["path"])
+                        for obj in self.json_data["components"]
+                        if obj["type"] in baseTextures
+                    ]
 
                     # Create a tuple list of all the 3d meshes  available.
                     # This tuple is composed of (meshFormat, meshPath)
@@ -148,19 +149,19 @@ class MS_Init_ImportProcess():
                     if len(self.assetName.split("_")) > 2:
                         self.assetName = "_".join(self.assetName.split("_")[:-1])
 
-                    self.materialName = self.assetName + '_' + self.assetID
+                    self.materialName = f'{self.assetName}_{self.assetID}'
 
                     # Commented these lines, but you can use this to load the json data of a specific
                     # asset and retrieve information like tags, real-world size, scanning location, etc...
-                    with open(os.path.join( self.assetPath, (self.assetID + ".json" ) ), 'r') as fl_:
+                    with open(os.path.join(self.assetPath, f"{self.assetID}.json"), 'r') as fl_:
                         self.assetJson =  json.load(fl_)
 
                     # Initialize the import method to start building our shader and import our geometry
                     self.initImportProcess()
-                    print("Imported asset from " + self.assetName + " Quixel Bridge")
+                    print(f"Imported asset from {self.assetName} Quixel Bridge")
 
         except Exception as e:
-            print( "Megascans LiveLink Error initializing the import process. Error: ", str(e) )
+            print("Megascans LiveLink Error initializing the import process. Error: ", e)
 
 
         globals()['Megascans_DataSet'] = None
